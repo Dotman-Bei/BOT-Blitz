@@ -44,7 +44,7 @@ export function Wordmark({ className = '' }: { className?: string }) {
   return (
     <svg
       viewBox={LOCKUP.viewBox}
-      className={`h-7 w-auto shrink-0 text-ink xs:h-8 sm:h-9 ${className}`}
+      className={`h-[1.375rem] w-auto shrink-0 text-ink sm:h-6 ${className}`}
       role="img"
       aria-label="BOT Blitz"
     >
