@@ -31,9 +31,9 @@ export function BlitzMark({ className = 'h-8 w-8', framed = false }: { className
 
 export function Wordmark({ className = '' }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
-      <BlitzMark className="h-9 w-9 sm:h-10 sm:w-10" />
-      <span className="text-[1.125rem] font-bold tracking-[-0.035em] text-ink sm:text-[1.25rem]">
+    <span className={`inline-flex shrink-0 items-center gap-2 ${className}`}>
+      <BlitzMark className="h-8 w-8 xs:h-9 xs:w-9 sm:h-10 sm:w-10" />
+      <span className="whitespace-nowrap text-[1.0625rem] font-bold tracking-[-0.035em] text-ink xs:text-[1.125rem] sm:text-[1.25rem]">
         BOT <span className="bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">Blitz</span>
       </span>
     </span>

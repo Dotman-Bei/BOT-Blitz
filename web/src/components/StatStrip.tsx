@@ -28,11 +28,13 @@ export function StatStrip() {
 
   return (
     <div className="rounded-3xl border border-white bg-white/60 px-5 py-5 shadow-lift backdrop-blur-lg sm:px-8">
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-5 lg:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-5 xs:gap-x-6 md:grid-cols-4">
         {items.map((it) => (
-          <div key={it.label} className="flex flex-col-reverse gap-1">
+          <div key={it.label} className="flex min-w-0 flex-col-reverse gap-1">
             <dt className="text-[0.6875rem] text-ink-muted">{it.label}</dt>
-            <dd className="tabular text-[1.5rem] font-bold tracking-[-0.03em] text-ink">{it.value}</dd>
+            <dd className="tabular whitespace-nowrap text-[1.125rem] font-bold tracking-[-0.03em] text-ink xs:text-[1.3125rem] sm:text-[1.5rem] md:text-[1.3125rem] lg:text-[1.5rem]">
+              {it.value}
+            </dd>
           </div>
         ))}
       </dl>

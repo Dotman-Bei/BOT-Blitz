@@ -49,20 +49,20 @@ export default function HomePage() {
   return (
     <div className="mx-auto max-w-6xl px-6">
       {/* hero */}
-      <section className="grid items-center gap-12 pb-14 pt-10 sm:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pt-20">
+      <section className="grid items-center gap-12 pb-14 pt-8 sm:pt-14 md:grid-cols-[1.1fr_0.9fr] md:gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:pt-20">
         <div className="animate-fade-up">
           <p className="eyebrow">Blitz Round · on BOT Chain</p>
-          <h1 className="mt-5 text-[2.5rem] leading-[1.05] text-ink sm:text-5xl lg:text-[3.5rem]">
+          <h1 className="mt-5 text-[2.125rem] leading-[1.05] text-ink xs:text-[2.5rem] sm:text-5xl md:text-[2.75rem] lg:text-[3.5rem]">
             Sixty seconds.{' '}
             <span className="bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">
-              Every tap on-chain.
+              Every tap <span className="whitespace-nowrap">on-chain.</span>
             </span>
           </h1>
-          <p className="mt-5 max-w-xl text-lg font-medium text-ink/80">
+          <p className="mt-5 max-w-xl text-base font-medium text-ink/80 xs:text-lg">
             The contract lights a cell. You tap it. BOT Chain confirms the transaction, adds your point and lights the
             next one - so your score is only as fast as the chain.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
             <Link href="/play/" className="btn-primary">
               Start a 60s round
             </Link>
@@ -82,7 +82,7 @@ export default function HomePage() {
       </section>
 
       {/* features */}
-      <section className="mt-24">
+      <section className="cv-auto mt-24">
         <p className="eyebrow">Why it's on-chain</p>
         <h2 className="mt-4 max-w-2xl text-[1.875rem] leading-[1.1] sm:text-[2.25rem]">
           The blockchain isn't behind the game. It is the game.
@@ -99,7 +99,7 @@ export default function HomePage() {
       </section>
 
       {/* steps */}
-      <section className="mt-24">
+      <section className="cv-auto mt-24">
         <p className="eyebrow">How a round works</p>
         <h2 className="mt-4 text-[1.875rem] leading-[1.1] sm:text-[2.25rem]">Connect, start, tap, settle.</h2>
         <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -116,7 +116,7 @@ export default function HomePage() {
       </section>
 
       {/* contract checks */}
-      <section className="mt-24 grid items-start gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="cv-auto mt-24 grid items-start gap-10 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="lg:sticky lg:top-28">
           <p className="eyebrow">Trust, as mechanism</p>
           <h2 className="mt-4 text-[1.875rem] leading-[1.1] sm:text-[2.25rem]">We never take the app's word for it.</h2>
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* closing */}
-      <section className="card mt-24 px-6 py-14 text-center sm:px-12">
+      <section className="card cv-auto mt-24 px-6 py-14 text-center sm:px-12">
         <p className="eyebrow">One round · 60 seconds</p>
         <h2 className="mx-auto mt-4 max-w-xl text-[1.875rem] leading-[1.1] sm:text-[2.25rem]">
           Sixty seconds is enough to find out.

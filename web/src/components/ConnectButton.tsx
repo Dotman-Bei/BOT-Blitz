@@ -32,8 +32,16 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
 
   if (!isConnected || !address) {
     return (
-      <button type="button" onClick={connectNow} disabled={isPending} className={`btn-ghost ${compact ? '!px-4 !py-2 text-sm' : '!py-2.5 text-sm'}`}>
-        <IconWallet /> {isPending ? 'Check wallet…' : 'Connect'}
+      <button
+        type="button"
+        onClick={connectNow}
+        disabled={isPending}
+        aria-label={isPending ? 'Check your wallet' : 'Connect wallet'}
+        className={`btn-ghost whitespace-nowrap ${compact ? '!px-3 !py-2 text-sm xs:!px-4' : '!py-2.5 text-sm'}`}
+      >
+        <IconWallet />
+        {/* Icon-only below 400px so the wordmark keeps its width on the smallest phones. */}
+        <span className={compact ? 'hidden xs:inline' : undefined}>{isPending ? 'Check wallet…' : 'Connect'}</span>
       </button>
     )
   }
@@ -45,9 +53,9 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
       onClick={() => disconnect()}
       title={`${address} - tap to disconnect`}
       aria-label={`Connected as ${address}. Disconnect`}
-      className="btn-ghost !px-4 !py-2.5 text-sm"
+      className={`btn-ghost whitespace-nowrap text-sm ${compact ? '!px-3 !py-2 xs:!px-4' : '!px-4 !py-2.5'}`}
     >
-      <span className={`h-2 w-2 rounded-full ${right ? 'bg-emerald-500' : 'bg-amber-500'}`} aria-hidden="true" />
+      <span className={`h-2 w-2 shrink-0 rounded-full ${right ? 'bg-emerald-500' : 'bg-amber-500'}`} aria-hidden="true" />
       <span className="font-mono text-[0.8125rem]">{shortAddress(address)}</span>
     </button>
   )

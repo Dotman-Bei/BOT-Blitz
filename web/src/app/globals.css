@@ -35,10 +35,10 @@
 @layer components {
   /* The soft floating panel the whole design is built from. */
   .card {
-    @apply rounded-card border border-white bg-white/70 shadow-card backdrop-blur-xl;
+    @apply rounded-card border border-white bg-white/70 shadow-card backdrop-blur-md sm:backdrop-blur-xl;
   }
   .card-sm {
-    @apply rounded-panel border border-white bg-white/65 shadow-lift backdrop-blur-lg;
+    @apply rounded-panel border border-white bg-white/65 shadow-lift backdrop-blur-md sm:backdrop-blur-lg;
   }
   .btn-primary {
     @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-gradient
@@ -69,6 +69,11 @@
   }
   .pb-safe {
     padding-bottom: calc(var(--sab) + 0.75rem);
+  }
+  /* Skip layout/paint of off-screen sections until they approach the viewport. */
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 640px;
   }
   .tabular {
     font-variant-numeric: tabular-nums;

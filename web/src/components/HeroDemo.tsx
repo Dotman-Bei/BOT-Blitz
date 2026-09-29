@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BlitzMark } from './BlitzMark'
 
 type Stage = 'lit' | 'tap' | 'pending' | 'confirmed'
@@ -30,12 +30,33 @@ function useReducedMotion() {
   return reduced
 }
 
+/** True while the element is on screen and the tab is visible, so the loop only runs when seen. */
+function useVisible(ref: React.RefObject<HTMLElement>) {
+  const [onScreen, setOnScreen] = useState(true)
+  const [tabVisible, setTabVisible] = useState(true)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), { rootMargin: '100px' })
+    io.observe(el)
+    const onVis = () => setTabVisible(document.visibilityState === 'visible')
+    document.addEventListener('visibilitychange', onVis)
+    return () => {
+      io.disconnect()
+      document.removeEventListener('visibilitychange', onVis)
+    }
+  }, [ref])
+  return onScreen && tabVisible
+}
+
 export function HeroDemo() {
   const reduced = useReducedMotion()
+  const rootRef = useRef<HTMLDivElement>(null)
+  const visible = useVisible(rootRef)
   const [s, setS] = useState({ idx: 0, stage: 'lit' as Stage, score: 9, secs: 45, block: 24_781_190 })
 
   useEffect(() => {
-    if (reduced) return
+    if (reduced || !visible) return
     let stageIdx = 0
     let timer: ReturnType<typeof setTimeout>
     const step = () => {
@@ -54,7 +75,7 @@ export function HeroDemo() {
     }
     timer = setTimeout(step, TIMELINE[0][1])
     return () => clearTimeout(timer)
-  }, [reduced])
+  }, [reduced, visible])
 
   const view = reduced ? FROZEN : s
   // After confirmation the chain has already lit the next cell.
@@ -62,9 +83,9 @@ export function HeroDemo() {
   const tappedCell = PATH[view.idx]
 
   return (
-    <div className="relative mx-auto w-full max-w-[20rem]" aria-hidden="true">
+    <div ref={rootRef} className="relative mx-auto w-full max-w-[20rem]" aria-hidden="true">
       {/* callout for depth */}
-      <div className="card-sm absolute -left-10 bottom-24 z-10 hidden w-40 p-3 sm:block lg:-left-24">
+      <div className="card-sm absolute -left-10 bottom-24 z-10 hidden w-40 p-3 sm:block md:hidden lg:-left-24 lg:block">
         <p className="text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-ink-soft">Score source</p>
         <p className="mt-1 text-[0.75rem] font-bold leading-snug text-ink">Read from the contract, not the app</p>
       </div>

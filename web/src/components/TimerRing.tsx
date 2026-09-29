@@ -18,7 +18,7 @@ export function TimerRing({ msLeft, total = 60_000 }: { msLeft: number; total?: 
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - frac)}
-          style={{ transition: 'stroke-dashoffset 0.1s linear' }}
+          style={{ transition: 'stroke-dashoffset 0.2s linear' }}
         />
         <defs>
           <linearGradient id="tr-g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">

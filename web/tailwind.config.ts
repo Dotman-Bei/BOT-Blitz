@@ -1,8 +1,12 @@
 import type { Config } from 'tailwindcss'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
+    // `xs` for small phones (320-399px get the tightest layout), declared first so it sorts before `sm`.
+    // `short` targets landscape phones, where height, not width, is the constraint.
+    screens: { xs: '400px', ...defaultTheme.screens, short: { raw: '(max-height: 500px) and (orientation: landscape)' } },
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],

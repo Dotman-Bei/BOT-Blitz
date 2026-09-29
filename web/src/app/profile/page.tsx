@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { Suspense, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import { isAddress, type Address } from 'viem'
 import { useQueryClient } from '@tanstack/react-query'
 import { Banner } from '@/components/Banner'
@@ -152,7 +152,8 @@ function Stat({ label, value, strong }: { label: string; value?: string; strong?
 
 /** Shows the browser's session key and lets the player pull any leftover gas float back. */
 function SessionFloat({ player, canSweep }: { player: Address; canSweep: boolean }) {
-  const account = typeof window !== 'undefined' ? loadSessionAccount(player) : null
+  // Deriving an account from a key is elliptic-curve work: do it once per player, not per render.
+  const account = useMemo(() => (typeof window !== 'undefined' ? loadSessionAccount(player) : null), [player])
   const balance = useBalance(account?.address)
   const qc = useQueryClient()
   const [state, setState] = useState<{ busy: boolean; msg?: string; hash?: string; error?: string }>({ busy: false })

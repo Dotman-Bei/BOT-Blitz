@@ -93,6 +93,8 @@ export function useBlitzGame(player: Address | undefined, ready: boolean) {
   const pendingRef = useRef(false)
   const settlingRef = useRef(false)
   const logId = useRef(0)
+  const phaseRef = useRef<Phase>(phase)
+  phaseRef.current = phase
 
   const setRound = useCallback((r: RoundView | null) => {
     roundRef.current = r
@@ -289,7 +291,7 @@ export function useBlitzGame(player: Address | undefined, ready: boolean) {
 
   useEffect(() => {
     if (phase !== 'live') return
-    const t = setInterval(() => setNow(Date.now()), 100)
+    const t = setInterval(() => setNow(Date.now()), 200)
     return () => clearInterval(t)
   }, [phase])
 
@@ -391,7 +393,9 @@ export function useBlitzGame(player: Address | undefined, ready: boolean) {
   const tap = useCallback(
     async (cell: number) => {
       const r = roundRef.current
-      if (phase !== 'live' || !r || pendingRef.current || timeLeftMs <= 0) return
+      // Read the clock from refs so this callback stays stable across timer ticks (keeps the memoised grid still).
+      const expired = !r || r.endTime * 1000 <= Date.now() + skewRef.current
+      if (phaseRef.current !== 'live' || !r || pendingRef.current || expired) return
       pendingRef.current = true
       setPendingCell(cell)
       setError(null)
@@ -441,7 +445,7 @@ export function useBlitzGame(player: Address | undefined, ready: boolean) {
         setPendingCell(null)
       }
     },
-    [addLog, applyReceipt, patchLog, phase, setRound, timeLeftMs, writeContractAsync],
+    [addLog, applyReceipt, patchLog, setRound, writeContractAsync],
   )
 
   const reset = useCallback(() => {

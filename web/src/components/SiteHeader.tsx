@@ -19,7 +19,7 @@ export function SiteHeader() {
   const active = (href: string) => path?.replace(/\/?$/, '/') === href
 
   return (
-    <header className="glass-bar sticky top-0 z-40 border-b pt-safe">
+    <header className="glass-bar sticky top-0 z-40 border-b pt-safe short:static">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 pb-3 sm:px-6">
         <Link href="/" aria-label="BOT Blitz home" className="rounded-xl">
           <Wordmark />

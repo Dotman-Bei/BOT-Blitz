@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import type { Flash } from '@/lib/useBlitzGame'
 
 /**
  * The 3x3 board. Only the lit cell comes from the chain; everything else is presentation.
  * Keys 1-9 map to cells left-to-right, top-to-bottom for fast desktop play.
  */
-export function GameGrid({
+export const GameGrid = memo(function GameGrid({
   target,
   pendingCell,
   flash,
@@ -74,4 +74,4 @@ export function GameGrid({
       })}
     </div>
   )
-}
+})

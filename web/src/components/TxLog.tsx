@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { explorerTx } from '@/lib/chain'
 import { formatSeconds } from '@/lib/format'
 import type { TxEntry, TxStatus } from '@/lib/useBlitzGame'
@@ -17,7 +18,7 @@ const statusTone: Record<TxStatus, string> = {
 }
 
 /** Every transaction this round, with its own status and measured confirmation time. */
-export function TxLog({ entries }: { entries: TxEntry[] }) {
+export const TxLog = memo(function TxLog({ entries }: { entries: TxEntry[] }) {
   if (!entries.length) {
     return <p className="rounded-2xl bg-white/70 px-4 py-5 text-center text-[0.8125rem] text-ink-muted">Transactions from this round appear here, each with a link to BOTScan.</p>
   }
@@ -48,4 +49,4 @@ export function TxLog({ entries }: { entries: TxEntry[] }) {
       })}
     </ol>
   )
-}
+})
