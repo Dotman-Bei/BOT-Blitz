@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+@layer base {
+  html,
+  body {
+    @apply bg-haze-400 text-ink antialiased;
+    overscroll-behavior-y: none;
+  }
+  body {
+    min-height: 100dvh;
+  }
+  button,
+  a,
+  label {
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-semibold tracking-[-0.035em];
+  }
+  /* One visible focus treatment for every control, including links on glass. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-400 ring-offset-2 ring-offset-haze-400;
+  }
+}
+
+@layer components {
+  /* The soft floating panel the whole design is built from. */
+  .card {
+    @apply rounded-card border border-white bg-white/70 shadow-card backdrop-blur-xl;
+  }
+  .card-sm {
+    @apply rounded-panel border border-white bg-white/65 shadow-lift backdrop-blur-lg;
+  }
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-gradient
+      px-7 py-3.5 font-semibold text-white shadow-brand transition
+      focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2
+      active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/85
+      bg-white/55 px-6 py-3.5 font-semibold text-ink shadow-ghost transition
+      focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2
+      active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-45;
+  }
+  .chip {
+    @apply grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white bg-white/80 text-brand-500 shadow-ghost;
+  }
+  .eyebrow {
+    @apply text-eyebrow uppercase text-ink-muted;
+  }
+  .glass-bar {
+    @apply border-white/60 bg-haze-400/70 backdrop-blur-xl;
+  }
+}
+
+@layer utilities {
+  .pt-safe {
+    padding-top: calc(var(--sat) + 0.75rem);
+  }
+  .pb-safe {
+    padding-bottom: calc(var(--sab) + 0.75rem);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ------------------------------------------------------------------ game grid feedback */
+
+@keyframes cell-hit {
+  0% { transform: scale(0.94); box-shadow: 0 0 0 0 rgba(66, 98, 212, 0.45); }
+  100% { transform: scale(1); box-shadow: 0 0 0 14px rgba(66, 98, 212, 0); }
+}
+@keyframes cell-miss {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.cell-hit { animation: cell-hit 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+.cell-miss { animation: cell-miss 0.28s ease-in-out; }
+
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.spin { animation: spin-slow 0.9s linear infinite; }
+
+/* ------------------------------------------------------------------ hero demo
+ * The one orchestrated loop: the phone plays a round on its own. The loop itself is driven
+ * by React state (so score and tx chip stay in sync with the lit cell); these are its easings. */
+@keyframes demo-tap {
+  0% { transform: scale(0.4); opacity: 0.9; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.demo-tap { animation: demo-tap 0.55s ease-out both; }
+
+/* ------------------------------------------------------------------ reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .spin { animation: none !important; }
+}

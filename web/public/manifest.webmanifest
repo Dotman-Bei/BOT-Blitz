@@ -1,0 +1,10 @@
+{
+  "name": "BOT Blitz",
+  "short_name": "BOT Blitz",
+  "description": "Sixty seconds. Every tap on-chain.",
+  "start_url": "/play/",
+  "display": "standalone",
+  "background_color": "#EDF2F7",
+  "theme_color": "#EDF2F7",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
