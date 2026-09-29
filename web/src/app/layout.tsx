@@ -19,7 +19,13 @@ export const metadata: Metadata = {
   description:
     'A 60-second on-chain game on BOT Chain. Tap the lit cell, the contract confirms and scores it, and your best round lands on a public leaderboard.',
   manifest: '/manifest.webmanifest',
-  icons: { icon: '/icon.svg' },
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export const viewport: Viewport = {

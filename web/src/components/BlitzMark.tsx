@@ -1,41 +1,61 @@
-/**
- * Four rounded corner brackets around a bolt, drawn in SVG so it inherits colour and the brackets
- * can animate on their own. In `framed` mode the brackets pull in and out while a transaction waits.
+import { BOARD_CELLS, CELL, LIT_CELL, LOCKUP, WORDMARK } from './logoData'
+
+/*
+ * The BOT Blitz mark: the game's 3x3 board with the lit cell popped up and right out of its slot -
+ * a tap, confirmed. Flat colour only: board in currentColor (ink by default), lit cell in brand indigo.
+ * Geometry comes from logoData.ts, generated alongside the files in /brand, so they never drift.
  */
-export function BlitzMark({ className = 'h-8 w-8', framed = false }: { className?: string; framed?: boolean }) {
+
+function Cells() {
   return (
-    <svg viewBox="0 0 40 40" className={className} aria-hidden="true" fill="none">
-      <defs>
-        <linearGradient id="bm-g" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#5C7DE2" />
-          <stop offset="0.5" stopColor="#4262D4" />
-          <stop offset="1" stopColor="#2948B5" />
-        </linearGradient>
-      </defs>
-      <g
-        stroke="url(#bm-g)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        className={framed ? 'origin-center motion-safe:animate-[bm-frame_2.2s_ease-in-out_infinite]' : undefined}
-      >
-        <path d="M4 12V8a4 4 0 0 1 4-4h4" />
-        <path d="M28 4h4a4 4 0 0 1 4 4v4" />
-        <path d="M36 28v4a4 4 0 0 1-4 4h-4" />
-        <path d="M12 36H8a4 4 0 0 1-4-4v-4" />
-      </g>
-      <path d="M22.2 9 13.5 21.4h6.2L17.8 31l8.7-12.4h-6.2L22.2 9Z" fill="url(#bm-g)" />
-      <style>{`@keyframes bm-frame{0%,100%{transform:scale(1)}50%{transform:scale(0.86)}}`}</style>
+    <>
+      {BOARD_CELLS.map(([x, y]) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width={CELL.size} height={CELL.size} rx={CELL.radius} fill="currentColor" />
+      ))}
+    </>
+  )
+}
+
+/**
+ * @param pending  While a transaction waits, the lit cell settles back into its slot and pops out
+ *                 again - the mark acts out "waiting for confirmation".
+ */
+export function BlitzMark({ className = 'h-8 w-8', framed: pending = false }: { className?: string; framed?: boolean }) {
+  const dx = LIT_CELL.slotX - LIT_CELL.x
+  const dy = LIT_CELL.slotY - LIT_CELL.y
+  return (
+    <svg viewBox="0 0 48 48" className={`text-ink ${className}`} aria-hidden="true">
+      <Cells />
+      <rect
+        x={LIT_CELL.x}
+        y={LIT_CELL.y}
+        width={CELL.size}
+        height={CELL.size}
+        rx={CELL.radius}
+        className={`fill-brand-500 ${pending ? 'motion-safe:animate-[bb-pop_1.4s_cubic-bezier(0.65,0,0.35,1)_infinite]' : ''}`}
+      />
+      {pending ? <style>{`@keyframes bb-pop{0%,100%{transform:translate(0,0)}45%,55%{transform:translate(${dx}px,${dy}px)}}`}</style> : null}
     </svg>
   )
 }
 
+/** Horizontal lockup: mark + outlined wordmark (Plus Jakarta Sans Bold, square i-dot as a lit cell). */
 export function Wordmark({ className = '' }: { className?: string }) {
   return (
-    <span className={`inline-flex shrink-0 items-center gap-2 ${className}`}>
-      <BlitzMark className="h-8 w-8 xs:h-9 xs:w-9 sm:h-10 sm:w-10" />
-      <span className="whitespace-nowrap text-[1.0625rem] font-bold tracking-[-0.035em] text-ink xs:text-[1.125rem] sm:text-[1.25rem]">
-        BOT <span className="bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent">Blitz</span>
-      </span>
-    </span>
+    <svg
+      viewBox={LOCKUP.viewBox}
+      className={`h-7 w-auto shrink-0 text-ink xs:h-8 sm:h-9 ${className}`}
+      role="img"
+      aria-label="BOT Blitz"
+    >
+      <g transform={LOCKUP.markTransform}>
+        <Cells />
+        <rect x={LIT_CELL.x} y={LIT_CELL.y} width={CELL.size} height={CELL.size} rx={CELL.radius} className="fill-brand-500" />
+      </g>
+      <g transform={LOCKUP.wordTransform}>
+        <path d={WORDMARK.path} fill="currentColor" />
+        <rect x={WORDMARK.dot.x} y={WORDMARK.dot.y} width={WORDMARK.dot.size} height={WORDMARK.dot.size} rx={WORDMARK.dot.rx} className="fill-brand-500" />
+      </g>
+    </svg>
   )
 }

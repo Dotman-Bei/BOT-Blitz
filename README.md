@@ -1,3 +1,5 @@
+<p align="center"><img src="brand/lockup-color.svg" alt="BOT Blitz" height="72"></p>
+
 # BOT Blitz
 
 **A 60-second game on BOT Chain where every tap is a transaction, and the contract keeps score.**
@@ -230,6 +232,10 @@ The contract hasn't been audited. It's an MVP for testnet.
 - **M1: Deployed MVP.** Contract, tests, four routes, full 60-second loop, on-chain scores, leaderboard, profile, README, demo URL.
 - **M2: First real users.** 25–100 players, real rounds and transaction history, gameplay feedback, and a published build log on the BOT Chain implementation.
 - **M3: Retention.** Daily challenges, weekly board resets and seasons, achievement badges, more simple modes, ecosystem quests. These start only once the core game has users.
+
+## Brand
+
+The logo and its variants, with usage rules, are in [brand/](brand/README.md).
 
 ## License
 
