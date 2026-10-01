@@ -1,0 +1,70 @@
+{
+  "purpose": "TEAM TEST WALLETS - proof the product works on mainnet across wallets. Funded by the team; not users.",
+  "network": "BOT Chain mainnet (677)",
+  "contract": "0x3d6F702BbF55dA10EAe0eC24ef4Cc262F3a71f3C",
+  "gasPrice": "20 gwei",
+  "wallets": [
+    {
+      "label": "test-wallet-1",
+      "address": "0x7E5C87A2059a6a620671396d2FB7FB1afF8C6D2C",
+      "roundId": "2",
+      "finalizeTx": "0x22cbbcbadc9519a0d94cea0a6874de6e7151da9928573944286924ffc0880345",
+      "gasUsed": [
+        "130381",
+        "50000 (failed)",
+        "69694"
+      ],
+      "startTx": "0x7c765214fd884b9b4ec3d96e9dac0e8ecadeef45f67e0ac3e9d1a98e542a353f",
+      "failedTapTx": "0x6a8eb177395900573c3a4fe05a7cbd967ebe45a31f280a5c3157968433ef7090",
+      "note": "tap ran out of gas (50k limit; a direct tap needs ~59.4k), so the expired round was settled instead"
+    },
+    {
+      "label": "test-wallet-2",
+      "address": "0x4382670F8Dfcd966C2C06D623efE5cC07b04EF62",
+      "roundId": "3",
+      "startTx": "0x6a09d373e25f4673d2c290babb9677459a7faebed375cf4c086d748f1c6a629d",
+      "tapTx": "0xeb8f85f1705a0a615316b9a71cd3917fd26650537dcea3ab73e6328965b96c6a",
+      "score": 1,
+      "gasUsed": [
+        "130381",
+        "59358"
+      ]
+    },
+    {
+      "label": "test-wallet-3",
+      "address": "0x63eF87a5472446DE92707CA06B4C1298e203d64a",
+      "roundId": "4",
+      "startTx": "0x8b64e50108ed843b1fc27b360a1ba85fb5a79b35463793db41da657f6ea5d431",
+      "tapTx": "0x3fb180c8a9ea55b6d92fe34466c6c8abd8436e40d2c1194a9f5cd774ae62329a",
+      "score": 1,
+      "gasUsed": [
+        "130381",
+        "59358"
+      ]
+    },
+    {
+      "label": "test-wallet-4",
+      "address": "0x99BB7b38dfCB1061d31e0Ba7297BB69BB2E56754",
+      "roundId": "5",
+      "startTx": "0x91a9e81c8452d629bca15702c85e5699a40761106896b41b59b739e9c3b7c109",
+      "tapTx": "0xddd68aca8b55a552091a7d8f01aca90ddc44b1c4ec324d71efedb043122b820b",
+      "score": 1,
+      "gasUsed": [
+        "130381",
+        "59358"
+      ]
+    },
+    {
+      "label": "test-wallet-5",
+      "address": "0x405bB99534133baCd672cB3520e33DF5dB9B80E9",
+      "roundId": "6",
+      "startTx": "0xdb35d317447a4f9daf09f89e4f7456a69c8d0d2c484ab787a9d10af9af6b6f8e",
+      "tapTx": "0xac0f4f25d84d776fe873e887d48ebf78f7bf44a60258b868aac2b641a6ebe093",
+      "score": 1,
+      "gasUsed": [
+        "130381",
+        "59358"
+      ]
+    }
+  ]
+}

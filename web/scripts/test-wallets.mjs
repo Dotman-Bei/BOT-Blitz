@@ -112,9 +112,13 @@ for (const w of wallets) {
 
 if (SEND && results.length) {
   const file = new URL('../../ops/test-wallet-interactions.json', import.meta.url)
-  let prior = []
-  try { prior = JSON.parse(readFileSync(file, 'utf8')) } catch { /* first run */ }
-  writeFileSync(file, JSON.stringify([...prior, ...results], null, 2) + '\n')
+  let doc = {
+    purpose: 'TEAM TEST WALLETS - proof the product works on mainnet across wallets. Funded by the team; not users.',
+    network: 'BOT Chain mainnet (677)', contract: ADDRESS, gasPrice: '20 gwei', wallets: [],
+  }
+  try { doc = JSON.parse(readFileSync(file, 'utf8')) } catch { /* first run */ }
+  doc.wallets.push(...results)
+  writeFileSync(file, JSON.stringify(doc, null, 2) + '\n')
   const sent = results.reduce((n, r) => n + (r.finalizeTx ? 1 : 2), 0)
   console.log(`\n${sent} transactions sent; evidence saved to ops/test-wallet-interactions.json`)
 } else if (!SEND) {

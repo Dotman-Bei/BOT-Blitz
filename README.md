@@ -169,6 +169,26 @@ Read back from the contract: round #1 score **3**, misses **1**, finalized; play
 - **The whole round** (start, 4 taps, settle, sweep) cost **0.0112 BOT**. Deploy plus round came to 0.0524 BOT.
 - **Player float:** the app sets aside 0.071 BOT per round at 20 gwei. That covers the fastest possible round (75 taps, about one per confirmation), and the unspent part is returned automatically.
 
+#### Team test wallets (not users)
+
+> These five wallets were **created and funded by the team** to show the contract working across separate wallets on mainnet. They are **not players** and are excluded from any user or traction numbers. Their funding is visible on BOTScan.
+
+Each wallet signs its own transactions directly (no session key) at 20 gwei, using [`web/scripts/test-wallets.mjs`](web/scripts/test-wallets.mjs). Full record: [`ops/test-wallet-interactions.json`](ops/test-wallet-interactions.json).
+
+| Wallet | Round | Transactions |
+|---|---|---|
+| [`0x7E5C…6D2C`](https://scan.botchain.ai/address/0x7E5C87A2059a6a620671396d2FB7FB1afF8C6D2C) | #2, settled (score 0) | [start](https://scan.botchain.ai/tx/0x7c765214fd884b9b4ec3d96e9dac0e8ecadeef45f67e0ac3e9d1a98e542a353f) · [tap, failed: out of gas](https://scan.botchain.ai/tx/0x6a8eb177395900573c3a4fe05a7cbd967ebe45a31f280a5c3157968433ef7090) · [settle](https://scan.botchain.ai/tx/0x22cbbcbadc9519a0d94cea0a6874de6e7151da9928573944286924ffc0880345) |
+| [`0x4382…EF62`](https://scan.botchain.ai/address/0x4382670F8Dfcd966C2C06D623efE5cC07b04EF62) | #3, score 1 | [start](https://scan.botchain.ai/tx/0x6a09d373e25f4673d2c290babb9677459a7faebed375cf4c086d748f1c6a629d) · [tap (hit)](https://scan.botchain.ai/tx/0xeb8f85f1705a0a615316b9a71cd3917fd26650537dcea3ab73e6328965b96c6a) |
+| [`0x63eF…d64a`](https://scan.botchain.ai/address/0x63eF87a5472446DE92707CA06B4C1298e203d64a) | #4, score 1 | [start](https://scan.botchain.ai/tx/0x8b64e50108ed843b1fc27b360a1ba85fb5a79b35463793db41da657f6ea5d431) · [tap (hit)](https://scan.botchain.ai/tx/0x3fb180c8a9ea55b6d92fe34466c6c8abd8436e40d2c1194a9f5cd774ae62329a) |
+| [`0x99BB…6754`](https://scan.botchain.ai/address/0x99BB7b38dfCB1061d31e0Ba7297BB69BB2E56754) | #5, score 1 | [start](https://scan.botchain.ai/tx/0x91a9e81c8452d629bca15702c85e5699a40761106896b41b59b739e9c3b7c109) · [tap (hit)](https://scan.botchain.ai/tx/0xddd68aca8b55a552091a7d8f01aca90ddc44b1c4ec324d71efedb043122b820b) |
+| [`0x405b…80E9`](https://scan.botchain.ai/address/0x405bB99534133baCd672cB3520e33DF5dB9B80E9) | #6, score 1 | [start](https://scan.botchain.ai/tx/0xdb35d317447a4f9daf09f89e4f7456a69c8d0d2c484ab787a9d10af9af6b6f8e) · [tap (hit)](https://scan.botchain.ai/tx/0xac0f4f25d84d776fe873e887d48ebf78f7bf44a60258b868aac2b641a6ebe093) |
+
+That's 10 successful contract transactions (5 starts, 4 scoring taps, 1 settle) and 1 failed tap. Rounds #3–#6 are scored on-chain but not settled, so they don't appear on the leaderboard yet; anyone can settle them with `finalizeRound`.
+
+**What the failed tap showed:** a tap signed directly by the player (no session key) costs **59,358 gas**, not the 42.4k of a session-key tap. Without a session key, the round's second storage slot is still all zeros, so the first tap's write to it is a zero-to-non-zero store (+20k gas). The 50k limit was too low; the script now uses 61k and checks each tap with `eth_estimateGas` before sending. The app isn't affected: in its "Sign every tap" mode the player's wallet estimates gas for each tap, and session-key taps (42.4k, because the key's address already fills that slot) run under a 70k limit.
+
+Measured for a first-time wallet at 20 gwei: `startRound` 130,381 gas (0.0026 BOT), direct tap 59,358 gas (0.0012 BOT), settling a 0-score round 69,694 gas (0.0014 BOT).
+
 ### Testnet (chain 968)
 
 Deployed 2026-09-29 via `https://rpc.bohr.life`.
