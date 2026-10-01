@@ -18,7 +18,11 @@ const EXPLORER = 'https://scan.botchain.ai'
 const ADDRESS = '0x3d6F702BbF55dA10EAe0eC24ef4Cc262F3a71f3C'
 const GAS_PRICE = 20_000_000_000n // network floor on mainnet
 const START_GAS = 140_000n // measured 131,481 for a first-time player
-const TAP_GAS = 50_000n // measured 42,383 for a hit
+// A direct (no session key) tap writes the round's second storage slot for the first time
+// (zero -> non-zero, 20k gas), so it costs ~59.4k, not the 42.4k of a session-key tap.
+// eth_estimateGas on mainnet: 60,176. A 50k limit ran out of gas - see README.
+const TAP_GAS = 61_000n
+const FINALIZE_GAS = 72_000n // measured 70,553 to settle a 0-score round
 const SEND = process.argv.includes('--send')
 
 const src = readFileSync(new URL('../src/lib/abi.ts', import.meta.url), 'utf8')
@@ -36,7 +40,7 @@ if ((await pc.getChainId()) !== 677) throw new Error('not BOT Chain mainnet')
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // The balance a wallet needs: spend on the start, plus the tap's full gas limit on hand.
-const NEED = 131_500n * GAS_PRICE + TAP_GAS * GAS_PRICE
+const NEED = 130_500n * GAS_PRICE + TAP_GAS * GAS_PRICE
 
 async function send(account, nonce, data, gas) {
   const tx = await account.signTransaction({ to: ADDRESS, data, gas, gasPrice: GAS_PRICE, nonce, chainId: 677, type: 'legacy' })
@@ -51,8 +55,23 @@ for (const w of wallets) {
   const account = privateKeyToAccount(w.private_key)
   const balance = await pc.getBalance({ address: account.address })
   const stats = await pc.readContract({ address: ADDRESS, abi, functionName: 'getPlayer', args: [account.address] })
-  const ready = balance >= NEED && stats.activeRoundId === 0n
-  console.log(`${w.label} ${account.address}  balance ${formatEther(balance)} BOT  ${ready ? 'ready' : balance < NEED ? `NEEDS ${formatEther(NEED)} BOT` : `has open round #${stats.activeRoundId}`}`)
+  // A wallet left with an expired open round (e.g. its tap failed) gets that round settled instead:
+  // one cheap finalizeRound rather than a whole new round.
+  if (stats.activeRoundId !== 0n) {
+    const open = await pc.readContract({ address: ADDRESS, abi, functionName: 'getRound', args: [stats.activeRoundId] })
+    const now = (await pc.getBlock()).timestamp
+    const canSettle = now >= open.endTime && balance >= FINALIZE_GAS * GAS_PRICE
+    const state = canSettle ? 'settle' : now < open.endTime ? 'still live, wait' : `NEEDS ${formatEther(FINALIZE_GAS * GAS_PRICE)} BOT to settle`
+    console.log(`${w.label} ${account.address}  balance ${formatEther(balance)} BOT  open round #${stats.activeRoundId} -> ${state}`)
+    if (!SEND || !canSettle) continue
+    const nonce = await pc.getTransactionCount({ address: account.address, blockTag: 'pending' })
+    const fin = await send(account, nonce, encodeFunctionData({ abi, functionName: 'finalizeRound', args: [stats.activeRoundId] }), FINALIZE_GAS)
+    console.log(`  settled round #${stats.activeRoundId}  gas ${fin.receipt.gasUsed}  ${EXPLORER}/tx/${fin.hash}`)
+    results.push({ label: w.label, address: account.address, roundId: stats.activeRoundId.toString(), finalizeTx: fin.hash, gasUsed: [fin.receipt.gasUsed.toString()] })
+    continue
+  }
+  const ready = balance >= NEED
+  console.log(`${w.label} ${account.address}  balance ${formatEther(balance)} BOT  ${ready ? 'ready' : `NEEDS ${formatEther(NEED)} BOT`}`)
   if (!SEND || !ready) continue
 
   let nonce = await pc.getTransactionCount({ address: account.address, blockTag: 'pending' })
@@ -64,6 +83,11 @@ for (const w of wallets) {
   const startBlock = start.receipt.blockNumber
   while ((await pc.getBlockNumber()) <= startBlock) await sleep(200)
   const round = await pc.readContract({ address: ADDRESS, abi, functionName: 'getRound', args: [roundId] })
+  // Never send a tap that would run out of gas: check this exact call against the limit first.
+  const tapEstimate = await pc.estimateContractGas({
+    address: ADDRESS, abi, functionName: 'submitAction', args: [roundId, round.step, round.currentTarget], account: account.address,
+  })
+  if (tapEstimate > TAP_GAS) throw new Error(`tap needs ${tapEstimate} gas > limit ${TAP_GAS}; not sending`)
   const tap = await send(
     account, nonce++,
     encodeFunctionData({ abi, functionName: 'submitAction', args: [roundId, round.step, round.currentTarget] }),
@@ -91,7 +115,8 @@ if (SEND && results.length) {
   let prior = []
   try { prior = JSON.parse(readFileSync(file, 'utf8')) } catch { /* first run */ }
   writeFileSync(file, JSON.stringify([...prior, ...results], null, 2) + '\n')
-  console.log(`\n${results.length * 2} transactions sent; evidence saved to ops/test-wallet-interactions.json`)
+  const sent = results.reduce((n, r) => n + (r.finalizeTx ? 1 : 2), 0)
+  console.log(`\n${sent} transactions sent; evidence saved to ops/test-wallet-interactions.json`)
 } else if (!SEND) {
   console.log(`\nDry run. Each wallet needs ${formatEther(NEED)} BOT. Re-run with --send.`)
 }
