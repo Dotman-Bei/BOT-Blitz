@@ -10,6 +10,8 @@ const SYMBOL = process.env.NEXT_PUBLIC_BOT_CURRENCY_SYMBOL || 'BOT'
 const NAME = process.env.NEXT_PUBLIC_BOT_CHAIN_NAME || 'BOT Chain'
 
 export const FAUCET_URL = process.env.NEXT_PUBLIC_BOT_FAUCET_URL || ''
+// Mainnet has no faucet: BOT comes from the official DEX (linked from the BOT Chain Quick Guide).
+export const DEX_URL = process.env.NEXT_PUBLIC_BOT_DEX_URL || ''
 export const BLITZ_ADDRESS = (process.env.NEXT_PUBLIC_BLITZ_ADDRESS || undefined) as Address | undefined
 export const IS_CONFIGURED = Boolean(CHAIN_ID && RPC_URL && BLITZ_ADDRESS)
 

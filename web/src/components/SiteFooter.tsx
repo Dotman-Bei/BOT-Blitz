@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BLITZ_ADDRESS, CHAIN_LABEL, explorerAddress, FAUCET_URL, botChain } from '@/lib/chain'
+import { BLITZ_ADDRESS, CHAIN_LABEL, DEX_URL, explorerAddress, FAUCET_URL, botChain } from '@/lib/chain'
 import { shortAddress } from '@/lib/format'
 import { Wordmark } from './BlitzMark'
 
@@ -31,6 +31,7 @@ export function SiteFooter() {
           <ul className="space-y-2">
             {explorer ? <li><a className={link} href={explorer} target="_blank" rel="noreferrer">BOTScan explorer</a></li> : null}
             {FAUCET_URL ? <li><a className={link} href={FAUCET_URL} target="_blank" rel="noreferrer">Testnet faucet</a></li> : null}
+            {DEX_URL ? <li><a className={link} href={DEX_URL} target="_blank" rel="noreferrer">Get BOT (official DEX)</a></li> : null}
             <li><a className={link} href="https://dev-docs.bohr.life/docs/Developers/" target="_blank" rel="noreferrer">BOT Chain docs</a></li>
           </ul>
         </div>

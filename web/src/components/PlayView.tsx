@@ -10,7 +10,7 @@ import { IconCheck, IconKey, IconTrophy } from './Icons'
 import { TimerRing } from './TimerRing'
 import { TxLog } from './TxLog'
 import { GateBanner, useSwitchToBot, type GateState } from './WalletGate'
-import { CHAIN_LABEL, FAUCET_URL } from '@/lib/chain'
+import { CHAIN_LABEL, DEX_URL, FAUCET_URL } from '@/lib/chain'
 import { formatSeconds } from '@/lib/format'
 import type { TxEntry, useBlitzGame } from '@/lib/useBlitzGame'
 
@@ -26,11 +26,16 @@ export function PlayView({ gate, game, best }: { gate: GateState; game: Game; be
           {game.error ? (
             <Banner tone="error" lead="Heads up.">
               {game.error}
-              {/Not enough BOT/.test(game.error) && FAUCET_URL ? (
+              {/Not enough BOT/.test(game.error) && (FAUCET_URL || DEX_URL) ? (
                 <>
                   {' '}
-                  <a className="font-semibold text-brand-600 underline" href={FAUCET_URL} target="_blank" rel="noreferrer">
-                    Get test BOT from the faucet
+                  <a
+                    className="font-semibold text-brand-600 underline"
+                    href={FAUCET_URL || DEX_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {FAUCET_URL ? 'Get test BOT from the faucet' : 'Get BOT on the official BOT DEX'}
                   </a>
                   .
                 </>
