@@ -16,3 +16,6 @@ web/out/
 web/*.tsbuildinfo
 
 .DS_Store
+
+# test-wallet keys (never commit)
+ops/*.local.*
