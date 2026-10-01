@@ -11,14 +11,18 @@ import { BLITZ_ADDRESS, botChain, publicClient } from './chain'
  * to the player's wallet when the round settles.
  */
 
-// Measured with `forge test --gas-report`: submitAction 24k-59k, finalizeRound up to ~252k.
-export const ACTION_GAS = 90_000n
-export const FINALIZE_GAS = 400_000n
+// Gas *limits* - the most a tx may use, sized from measurements with headroom. They don't change
+// what a tx costs (you pay for gas used), only how much the key must hold for each tx.
+// Measured: submitAction 38.6k (miss) / 42.4k (hit) live, 59.4k worst case in tests;
+// finalizeRound 173.5k live, 252.3k worst case (full top-20 board).
+export const ACTION_GAS = 70_000n
+export const FINALIZE_GAS = 300_000n
 const TRANSFER_GAS = 21_000n
-// One action per block per round; ~90 blocks fit in 60s at the measured block time. We budget for
-// that ceiling at the typical cost, plus a finalize and the sweep.
-const EXPECTED_ACTION_GAS = 50_000n
-const MAX_ACTIONS = 90n
+// The float covers the fastest possible round at the measured cost: each tap waits for its receipt
+// (median 0.84s on BOT Chain), so ~75 taps fit in 60s. Plus one settle and the sweep back.
+// At the 20 gwei network floor that is ~0.071 BOT, and whatever isn't spent is returned.
+const EXPECTED_ACTION_GAS = 43_000n
+const MAX_ACTIONS = 75n
 
 const storageKey = (player: Address) => `botblitz:session:${player.toLowerCase()}`
 

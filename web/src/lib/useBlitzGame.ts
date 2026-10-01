@@ -320,8 +320,10 @@ export function useBlitzGame(player: Address | undefined, ready: boolean) {
         value = held >= budget ? 0n : budget - held
       }
       const balance = await publicClient.getBalance({ address: player })
-      if (balance < value + gasPrice * 400_000n) {
-        setError(`Not enough BOT. This round needs about ${formatBot(value + gasPrice * 400_000n)} BOT including the gas float.`)
+      // startRound measured 147k-255k gas (the top end when it also settles an old round).
+      const startGas = 300_000n
+      if (balance < value + gasPrice * startGas) {
+        setError(`Not enough BOT. This round needs about ${formatBot(value + gasPrice * startGas)} BOT including the gas float.`)
         setPhase('idle')
         return
       }

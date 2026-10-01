@@ -50,7 +50,8 @@ if (before.activeRoundId !== 0n) {
 }
 
 const gasPrice = await pc.getGasPrice()
-const float = gasPrice * (50_000n * BigInt(TAPS + 5) + 400_000n + 21_000n)
+// Same measured budget as the app: 43k per tap (+2 spare), a 300k settle limit, the sweep.
+const float = gasPrice * (43_000n * BigInt(TAPS + 2) + 300_000n + 21_000n)
 
 let t0 = performance.now()
 const startHash = await wallet.writeContract({ address: ADDRESS, abi, functionName: 'startRound', args: [session.address], value: float })
@@ -76,7 +77,7 @@ for (let i = 0; i < TAPS; i++) {
   const wrong = i % 4 === 3
   const choice = wrong ? (target + 1) % 9 : target
   t0 = performance.now()
-  const hash = await send(encodeFunctionData({ abi, functionName: 'submitAction', args: [roundId, step, choice] }), 90_000n)
+  const hash = await send(encodeFunctionData({ abi, functionName: 'submitAction', args: [roundId, step, choice] }), 70_000n)
   const rc = await pc.waitForTransactionReceipt({ hash })
   const ms = performance.now() - t0
   latencies.push(ms)
@@ -118,7 +119,7 @@ try {
 }
 
 t0 = performance.now()
-const finHash = await send(encodeFunctionData({ abi, functionName: 'finalizeRound', args: [roundId] }), 400_000n)
+const finHash = await send(encodeFunctionData({ abi, functionName: 'finalizeRound', args: [roundId] }), 300_000n)
 const finRc = await pc.waitForTransactionReceipt({ hash: finHash })
 console.log(`finalize    ${finRc.status}  ${(performance.now() - t0).toFixed(0)}ms  gas ${finRc.gasUsed}  ${link(finHash)}`)
 
