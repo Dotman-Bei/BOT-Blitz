@@ -21,19 +21,25 @@ const rect = (x, y, s, r, fill) =>
 
 const buf = fs.readFileSync(new URL('./PlusJakartaSans-Bold.ttf', import.meta.url))
 const font = opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength))
+// Own serializer: opentype.js v2's toPathData emits NaN for some quadratic segments.
+const n2 = (v) => +v.toFixed(2)
+const pathData = (p) => p.commands.map((c) =>
+  c.type === 'Z' ? 'Z' : c.type === 'Q' ? `Q${n2(c.x1)} ${n2(c.y1)} ${n2(c.x)} ${n2(c.y)}`
+    : c.type === 'C' ? `C${n2(c.x1)} ${n2(c.y1)} ${n2(c.x2)} ${n2(c.y2)} ${n2(c.x)} ${n2(c.y)}` : `${c.type}${n2(c.x)} ${n2(c.y)}`).join('')
+
 // Manual layout (charToGlyph + pair kerning): this font's GSUB tables trip opentype.js shaping.
 function layout(s, x, y, size, tracking, draw) {
   const glyphs = [...s].map((c) => font.charToGlyph(c)), scale = size / font.unitsPerEm
   glyphs.forEach((g, i) => {
     if (draw) draw(g.getPath(x, y, size))
     const next = glyphs[i + 1]
-    x += (g.advanceWidth + (next ? font.getKerningValue(g, next) : 0)) * scale + tracking * size
+    x += (g.advanceWidth + ((next && font.getKerningValue(g, next)) || 0)) * scale + tracking * size
   })
   return x
 }
 const text = (s, x, y, size, fill, tracking = 0) => {
   let d = ''
-  layout(s, x, y, size, tracking, (p) => (d += p.toPathData(2)))
+  layout(s, x, y, size, tracking, (p) => (d += pathData(p)))
   return `<path d="${d}" fill="${fill}"/>`
 }
 const width = (s, size, tracking = 0) => layout(s, 0, 0, size, tracking) - tracking * size
