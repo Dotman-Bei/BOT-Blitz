@@ -178,4 +178,28 @@ for (const [name, spec] of posts) {
   fs.writeFileSync(`${OUT}/${name}.svg`, svg)
   await sharp(Buffer.from(svg), { density: 144 }).resize({ width: 3200 }).png({ compressionLevel: 9 }).toFile(`${OUT}/${name}.png`)
 }
+// Article cover (1500x600, X's 5:2 article header). Carries the required launch line verbatim.
+function articleCover() {
+  const CW = 1500, CH = 600, k = 7.2, P = PITCH * k, ox = 1080, oy = 210
+  const taken = new Set([...BOARD.map(([c, r]) => `${c},${r}`), '2,0', '3,0', '2,-1', '3,-1'])
+  let field = ''
+  for (let r = -2; r <= 4; r++) for (let c = -2; c <= 4; c++) {
+    if (taken.has(`${c},${r}`)) continue
+    const x = ox + c * P, y = oy + r * P
+    if (x < 900 || x + CELL * k > CW || y + CELL * k < 0 || y > CH) continue
+    field += rect(x, y, CELL * k, CELL * k, R * k, CELLTINT)
+  }
+  let o = rect(0, 0, CW, CH, 0, '#FFFFFF') + field + mark(ox, oy, k)
+  o += lockup(M, 72, 42)
+  o += eyebrow('Announcement · Chain ID 677', M, 238)
+  o += text('Officially launched', M, 322, 72, INK, HEAD) + text('on BOT Chain Mainnet.', M, 402, 72, LIT, HEAD)
+  o += text('A 60-second game where every tap is a transaction', M, 470, 24, MUTED, { font: MED })
+  o += text('and the contract keeps score.', M, 506, 24, MUTED, { font: MED })
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CW} ${CH}" width="${CW}" height="${CH}">${o}</svg>`
+}
+{
+  const svg = articleCover()
+  fs.writeFileSync(`${OUT}/00-article-cover.svg`, svg)
+  await sharp(Buffer.from(svg), { density: 144 }).resize({ width: 3000 }).png({ compressionLevel: 9 }).toFile(`${OUT}/00-article-cover.png`)
+}
 console.log('banners done')

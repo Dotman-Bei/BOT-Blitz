@@ -7,14 +7,14 @@ Each post fits X's 280-character limit for unverified accounts. Replace `[app li
 ## Thread (attach `01-thread-launch.png` to post 1)
 
 ### 1/6
-BOT Blitz is live on BOT Chain mainnet (chain ID 677).
+BOT Blitz: Officially launched on BOT Chain Mainnet (chain ID 677).
 
-A 60-second game where every tap is an on-chain transaction and the smart contract keeps score. No backend. No token. No entry fee.
+A 60-second game where every tap is a transaction and the smart contract keeps score. No backend. No token. No entry fee.
 
 Verified contract:
 0x3d6F702BbF55dA10EAe0eC24ef4Cc262F3a71f3C
 
-Technical breakdown below.
+Breakdown below.
 
 ### 2/6
 2/ Round lifecycle:
