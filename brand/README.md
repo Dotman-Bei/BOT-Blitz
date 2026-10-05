@@ -32,6 +32,15 @@ All assets are SVG. The PNGs are exports for places that need bitmaps.
 | PWA icons | `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `app-icon.svg`, `app-icon-maskable.svg` |
 | Large bitmaps | `mark-color-1024.png`, `lockup-color@2x.png`, `lockup-reversed@2x.png` |
 
+## Social (Twitter/X)
+
+| Asset | File |
+|---|---|
+| Profile picture (1000×1000, X crops to a circle) | `social/twitter-pfp.png` (white), `social/twitter-pfp-dark.png` (ink) |
+| Header (3000×1000, X's 3:1 at 2x) | `social/twitter-header.png` |
+
+The header keeps its copy in the upper left, clear of where the avatar overlaps the bottom-left corner. Regenerate with `node social.mjs ..` from `brand/tools`.
+
 ## Which mark, at which size
 
 - **Primary mark:** 24px and up.
