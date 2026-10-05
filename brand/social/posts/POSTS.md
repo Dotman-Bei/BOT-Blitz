@@ -1,6 +1,6 @@
 # BOT Blitz mainnet launch posts
 
-Each post fits X's 280-character limit for unverified accounts. Replace `[app link]` with the live app URL before posting. All figures are measured mainnet values from the README's Deployment section.
+Five posts: 1 thread and 4 single posts. Each post fits X's 280-character limit for unverified accounts. Replace `[app link]` with the live app URL before posting. All figures are measured mainnet values from the README's Deployment section.
 
 ---
 
@@ -72,12 +72,7 @@ RoundExpired: action after 60s
 OneActionPerBlock: second tap in a block
 NotRoundOwner: caller is not the player or its session key
 
-## Post 4: Architecture (attach `05-leaderboard.png`)
-BOT Blitz runs with no backend and no indexer. The frontend is a static build that reads and writes the contract directly.
-
-Personal bests, player stats, round history and the top-20 leaderboard live in contract storage, readable by anyone on BOTScan.
-
-## Post 5: Verification (attach `06-tests.png`)
+## Post 4: Verification (attach `06-tests.png`)
 BOT Blitz contract status:
 
 27/27 Foundry tests passing, including a fuzz test asserting score = correct taps
