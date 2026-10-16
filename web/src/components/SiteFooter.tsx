@@ -6,6 +6,10 @@ import { Wordmark } from './BlitzMark'
 const head = 'font-mono text-[0.625rem] uppercase tracking-[0.22em] text-brand-500'
 const link = 'font-mono text-[0.78rem] text-ink-muted hover:text-ink'
 
+// BOT Chain's official site (botchain.ai, verified live 2026-10-16). The explorer comes from the
+// chain config, so it always matches the network the app is built for.
+const BOT_CHAIN_SITE = 'https://www.botchain.ai'
+
 export function SiteFooter() {
   const explorer = botChain.blockExplorers?.default.url
   const contract = BLITZ_ADDRESS ? explorerAddress(BLITZ_ADDRESS) : undefined
@@ -29,7 +33,8 @@ export function SiteFooter() {
         <div className="space-y-3">
           <h3 className={head}>Chain</h3>
           <ul className="space-y-2">
-            {explorer ? <li><a className={link} href={explorer} target="_blank" rel="noreferrer">BOTScan explorer</a></li> : null}
+            <li><a className={link} href={BOT_CHAIN_SITE} target="_blank" rel="noreferrer">BOT Chain website</a></li>
+            {explorer ? <li><a className={link} href={explorer} target="_blank" rel="noreferrer">BOT Chain Explorer</a></li> : null}
             {FAUCET_URL ? <li><a className={link} href={FAUCET_URL} target="_blank" rel="noreferrer">Testnet faucet</a></li> : null}
             {DEX_URL ? <li><a className={link} href={DEX_URL} target="_blank" rel="noreferrer">Get BOT (official DEX)</a></li> : null}
             <li><a className={link} href="https://dev-docs.bohr.life/docs/Developers/" target="_blank" rel="noreferrer">BOT Chain docs</a></li>
@@ -51,6 +56,27 @@ export function SiteFooter() {
             <li><span className={link}>MIT licensed</span></li>
           </ul>
         </div>
+      </div>
+
+      {/* Built-on strip: the chain's name with its official website and explorer, on every page. */}
+      <div className="mt-10 flex flex-col gap-3 border-t border-white/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[0.8125rem] text-ink-muted">
+          Built on <span className="font-bold text-ink">BOT Chain</span>
+        </p>
+        <ul className="flex flex-wrap gap-x-5 gap-y-2">
+          <li>
+            <a className={link} href={BOT_CHAIN_SITE} target="_blank" rel="noreferrer">
+              BOT Chain official website
+            </a>
+          </li>
+          {explorer ? (
+            <li>
+              <a className={link} href={explorer} target="_blank" rel="noreferrer">
+                BOT Chain Explorer
+              </a>
+            </li>
+          ) : null}
+        </ul>
       </div>
     </footer>
   )
